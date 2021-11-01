@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const _create_account_dto_1 = require("./dtos/\bcreate-account.dto");
+const login_dto_1 = require("./dtos/login.dto");
 const user_entity_1 = require("./entities/user.entity");
 const users_service_1 = require("./users.service");
 let UsersResolver = class UsersResolver {
@@ -24,10 +25,27 @@ let UsersResolver = class UsersResolver {
     getAllUsers() {
         return [];
     }
-    createAccount(data) {
+    async createAccount(createAccountInput) {
         try {
+            return await this.userService.createAccount(createAccountInput);
         }
-        catch (error) { }
+        catch (error) {
+            return {
+                ok: false,
+                error,
+            };
+        }
+    }
+    async login(loginInput) {
+        try {
+            return await this.userService.login(loginInput);
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error,
+            };
+        }
     }
 };
 __decorate([
@@ -38,11 +56,18 @@ __decorate([
 ], UsersResolver.prototype, "getAllUsers", null);
 __decorate([
     (0, graphql_1.Mutation)((type) => _create_account_dto_1.CreateAccountOutput),
-    __param(0, (0, graphql_1.Args)('data')),
+    __param(0, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [_create_account_dto_1.CreateAccountInput]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UsersResolver.prototype, "createAccount", null);
+__decorate([
+    (0, graphql_1.Mutation)((returns) => login_dto_1.LoginOutput),
+    __param(0, (0, graphql_1.Args)('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [login_dto_1.LoginInput]),
+    __metadata("design:returntype", Promise)
+], UsersResolver.prototype, "login", null);
 UsersResolver = __decorate([
     (0, graphql_1.Resolver)((of) => user_entity_1.User),
     __metadata("design:paramtypes", [users_service_1.UsersService])

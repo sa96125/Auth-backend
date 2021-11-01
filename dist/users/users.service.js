@@ -21,6 +21,49 @@ let UsersService = class UsersService {
     constructor(users) {
         this.users = users;
     }
+    async createAccount({ email, password, role, }) {
+        try {
+            const exist = await this.users.findOne({ email });
+            if (exist) {
+                return { ok: false, error: 'there is a user with that email already' };
+            }
+            await this.users.save(this.users.create({ email, password, role }));
+            return {
+                ok: true,
+            };
+        }
+        catch (error) {
+            return { ok: false, error: "can't create user." };
+        }
+    }
+    async login({ email, password, }) {
+        try {
+            const user = await this.users.findOne({ email });
+            if (!user) {
+                return {
+                    ok: false,
+                    error: 'there is no User.',
+                };
+            }
+            const passwordCorrect = await user.checkPassword(password);
+            if (!passwordCorrect) {
+                return {
+                    ok: false,
+                    error: 'password is incorrect',
+                };
+            }
+            return {
+                ok: true,
+                token: 'rarara',
+            };
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error,
+            };
+        }
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
