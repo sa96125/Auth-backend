@@ -14,4 +14,7 @@ export class JwtService {
     // return jwt.sign(payload, this.configService.get('SECRET_KEY'));
     return jwt.sign(payload, this.options.secretKey);
   }
+  verify(token: string) {
+    return jwt.verify(token, this.options.secretKey);
+  }
 }
