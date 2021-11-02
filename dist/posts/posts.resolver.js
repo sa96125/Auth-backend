@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostsResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const graphql_2 = require("@nestjs/graphql");
-const _create_post_dto_1 = require("./dtos/\bcreate-post.dto");
+const create_post_dto_1 = require("./dtos/create-post.dto");
 const update_post_dto_1 = require("./dtos/update-post.dto");
 const post_entity_1 = require("./entities/post.entity");
 const posts_service_1 = require("./posts.service");
@@ -57,7 +57,7 @@ __decorate([
     (0, graphql_1.Mutation)((returns) => Boolean),
     __param(0, (0, graphql_1.Args)('data')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [_create_post_dto_1.CreatePostDto]),
+    __metadata("design:paramtypes", [create_post_dto_1.CreatePostDto]),
     __metadata("design:returntype", Promise)
 ], PostsResolver.prototype, "createPost", null);
 __decorate([

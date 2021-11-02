@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const _create_account_dto_1 = require("./dtos/\bcreate-account.dto");
+const create_account_dto_1 = require("./dtos/create-account.dto");
 const login_dto_1 = require("./dtos/login.dto");
 const user_entity_1 = require("./entities/user.entity");
 const users_service_1 = require("./users.service");
@@ -58,10 +58,10 @@ __decorate([
     __metadata("design:returntype", Array)
 ], UsersResolver.prototype, "getAllUsers", null);
 __decorate([
-    (0, graphql_1.Mutation)((type) => _create_account_dto_1.CreateAccountOutput),
+    (0, graphql_1.Mutation)((type) => create_account_dto_1.CreateAccountOutput),
     __param(0, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [_create_account_dto_1.CreateAccountInput]),
+    __metadata("design:paramtypes", [create_account_dto_1.CreateAccountInput]),
     __metadata("design:returntype", Promise)
 ], UsersResolver.prototype, "createAccount", null);
 __decorate([

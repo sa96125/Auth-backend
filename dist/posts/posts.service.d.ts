@@ -1,5 +1,5 @@
 import { Repository, UpdateResult } from 'typeorm';
-import { CreatePostDto } from './dtos/\bcreate-post.dto';
+import { CreatePostDto } from './dtos/create-post.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { Post } from './entities/post.entity';
 export declare class PostsService {

@@ -1,4 +1,4 @@
-import { CreatePostDto } from './dtos/\bcreate-post.dto';
+import { CreatePostDto } from './dtos/create-post.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
 import { Post } from './entities/post.entity';
 import { PostsService } from './posts.service';

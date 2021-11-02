@@ -11,8 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdatePostDto = exports.UpdatePostDataType = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const _create_post_dto_1 = require("./\bcreate-post.dto");
-let UpdatePostDataType = class UpdatePostDataType extends (0, graphql_1.PartialType)(_create_post_dto_1.CreatePostDto) {
+const create_post_dto_1 = require("./create-post.dto");
+let UpdatePostDataType = class UpdatePostDataType extends (0, graphql_1.PartialType)(create_post_dto_1.CreatePostDto) {
 };
 UpdatePostDataType = __decorate([
     (0, graphql_1.InputType)()
