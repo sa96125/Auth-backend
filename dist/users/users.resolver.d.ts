@@ -8,5 +8,5 @@ export declare class UsersResolver {
     getAllUsers(): User[];
     createAccount(createAccountInput: CreateAccountInput): Promise<CreateAccountOutput>;
     login(loginInput: LoginInput): Promise<LoginOutput>;
-    me(): void;
+    me(context: any): void;
 }

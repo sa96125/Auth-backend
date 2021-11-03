@@ -19,6 +19,7 @@ const common_module_1 = require("./common/common.module");
 const user_entity_1 = require("./users/entities/user.entity");
 const jwt_module_1 = require("./jwt/jwt.module");
 const jwt_middleware_1 = require("./jwt/jwt.middleware");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -56,6 +57,7 @@ AppModule = __decorate([
             }),
             graphql_1.GraphQLModule.forRoot({
                 autoSchemaFile: true,
+                context: ({ req }) => ({ user: req['user'] }),
             }),
             posts_module_1.PostsModule,
             users_module_1.UsersModule,
@@ -63,6 +65,7 @@ AppModule = __decorate([
             jwt_module_1.JwtModule.forRoot({
                 secretKey: process.env.SECRET_KEY,
             }),
+            auth_module_1.AuthModule,
         ],
         controllers: [],
         providers: [],
