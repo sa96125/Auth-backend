@@ -13,13 +13,17 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersResolver = void 0;
-const common_1 = require("@nestjs/common");
 const graphql_1 = require("@nestjs/graphql");
-const auth_guard_1 = require("../auth/auth.guard");
-const create_account_dto_1 = require("./dtos/create-account.dto");
-const login_dto_1 = require("./dtos/login.dto");
+const common_1 = require("@nestjs/common");
 const user_entity_1 = require("./entities/user.entity");
 const users_service_1 = require("./users.service");
+const auth_guard_1 = require("../auth/auth.guard");
+const auth_user_decorator_1 = require("../auth/auth-user.decorator");
+const create_account_dto_1 = require("./dtos/create-account.dto");
+const login_dto_1 = require("./dtos/login.dto");
+const user_profile_dto_1 = require("./dtos/user-profile.dto");
+const edit_profile_dto_1 = require("./dtos/edit-profile.dto");
+const verify_email_dto_1 = require("./dtos/verify-email.dto");
 let UsersResolver = class UsersResolver {
     constructor(userService) {
         this.userService = userService;
@@ -49,8 +53,43 @@ let UsersResolver = class UsersResolver {
             };
         }
     }
-    me(context) {
-        return;
+    me(authUser) {
+        return authUser;
+    }
+    async userProfile(userProfileInput) {
+        try {
+            const user = await this.userService.findById(userProfileInput.userId);
+            if (!user) {
+                throw new Error();
+            }
+            return {
+                ok: Boolean(user),
+                user,
+            };
+        }
+        catch (error) {
+            return {
+                error: 'user not found',
+                ok: false,
+            };
+        }
+    }
+    async editProfile(authUser, editProfileInput) {
+        try {
+            await this.userService.editProfile(authUser.id, editProfileInput);
+            return {
+                ok: true,
+            };
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error,
+            };
+        }
+    }
+    async verifyEmail(verifyEmailInput) {
+        return await this.userService.verifyEmail(verifyEmailInput.code);
     }
 };
 __decorate([
@@ -76,11 +115,36 @@ __decorate([
 __decorate([
     (0, graphql_1.Query)((returns) => user_entity_1.User),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    __param(0, (0, graphql_1.Context)()),
+    __param(0, (0, auth_user_decorator_1.AuthUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [user_entity_1.User]),
+    __metadata("design:returntype", user_entity_1.User)
 ], UsersResolver.prototype, "me", null);
+__decorate([
+    (0, graphql_1.Query)((returns) => user_profile_dto_1.UserProfileOutput),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    __param(0, (0, graphql_1.Args)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_profile_dto_1.UserProfileInput]),
+    __metadata("design:returntype", Promise)
+], UsersResolver.prototype, "userProfile", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, graphql_1.Mutation)((returns) => edit_profile_dto_1.EditProfileOutput),
+    __param(0, (0, auth_user_decorator_1.AuthUser)()),
+    __param(1, (0, graphql_1.Args)('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [user_entity_1.User,
+        edit_profile_dto_1.EditProfileInput]),
+    __metadata("design:returntype", Promise)
+], UsersResolver.prototype, "editProfile", null);
+__decorate([
+    (0, graphql_1.Mutation)((returns) => verify_email_dto_1.VerifyEmailOutput),
+    __param(0, (0, graphql_1.Args)('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [verify_email_dto_1.VerifyEmailInput]),
+    __metadata("design:returntype", Promise)
+], UsersResolver.prototype, "verifyEmail", null);
 UsersResolver = __decorate([
     (0, graphql_1.Resolver)((of) => user_entity_1.User),
     __metadata("design:paramtypes", [users_service_1.UsersService])

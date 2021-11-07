@@ -11,15 +11,16 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const graphql_1 = require("@nestjs/graphql");
 const typeorm_1 = require("@nestjs/typeorm");
-const posts_module_1 = require("./posts/posts.module");
-const Joi = require("joi");
-const post_entity_1 = require("./posts/entities/post.entity");
-const users_module_1 = require("./users/users.module");
 const common_module_1 = require("./common/common.module");
-const user_entity_1 = require("./users/entities/user.entity");
-const jwt_module_1 = require("./jwt/jwt.module");
-const jwt_middleware_1 = require("./jwt/jwt.middleware");
 const auth_module_1 = require("./auth/auth.module");
+const users_module_1 = require("./users/users.module");
+const posts_module_1 = require("./posts/posts.module");
+const jwt_module_1 = require("./jwt/jwt.module");
+const user_entity_1 = require("./users/entities/user.entity");
+const verification_entity_1 = require("./users/entities/verification.entity");
+const post_entity_1 = require("./posts/entities/post.entity");
+const jwt_middleware_1 = require("./jwt/jwt.middleware");
+const Joi = require("joi");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -53,19 +54,19 @@ AppModule = __decorate([
                 database: process.env.DB_DATABASE,
                 synchronize: process.env.NODE_ENV !== 'prod',
                 logging: true,
-                entities: [user_entity_1.User, post_entity_1.Post],
+                entities: [user_entity_1.User, verification_entity_1.Verification, post_entity_1.Post],
             }),
             graphql_1.GraphQLModule.forRoot({
                 autoSchemaFile: true,
                 context: ({ req }) => ({ user: req['user'] }),
             }),
-            posts_module_1.PostsModule,
-            users_module_1.UsersModule,
             common_module_1.CommonModule,
+            auth_module_1.AuthModule,
+            users_module_1.UsersModule,
+            posts_module_1.PostsModule,
             jwt_module_1.JwtModule.forRoot({
                 secretKey: process.env.SECRET_KEY,
             }),
-            auth_module_1.AuthModule,
         ],
         controllers: [],
         providers: [],

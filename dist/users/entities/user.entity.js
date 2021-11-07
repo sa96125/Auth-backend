@@ -24,11 +24,13 @@ var UserRole;
 (0, graphql_1.registerEnumType)(UserRole, { name: 'UserRole' });
 let User = class User extends core_entity_1.CoreEntity {
     async hashFunction() {
-        try {
-            this.password = await bcrypt.hash(this.password, 10);
-        }
-        catch (error) {
-            throw new common_1.InternalServerErrorException();
+        if (this.password) {
+            try {
+                this.password = await bcrypt.hash(this.password, 10);
+            }
+            catch (error) {
+                throw new common_1.InternalServerErrorException();
+            }
         }
     }
     async checkPassword(aPassword) {
@@ -49,7 +51,7 @@ __decorate([
 ], User.prototype, "email", void 0);
 __decorate([
     (0, graphql_1.Field)((returns) => String, { nullable: true }),
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ select: false }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
@@ -61,7 +63,13 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "role", void 0);
 __decorate([
+    (0, graphql_1.Field)((returns) => Boolean),
+    (0, typeorm_1.Column)({ default: false }),
+    __metadata("design:type", Boolean)
+], User.prototype, "verified", void 0);
+__decorate([
     (0, typeorm_1.BeforeInsert)(),
+    (0, typeorm_1.BeforeUpdate)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

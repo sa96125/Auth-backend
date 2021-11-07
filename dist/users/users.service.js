@@ -13,14 +13,18 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
+const typeorm_1 = require("typeorm");
 const common_1 = require("@nestjs/common");
-const typeorm_1 = require("@nestjs/typeorm");
-const typeorm_2 = require("typeorm");
-const user_entity_1 = require("./entities/user.entity");
+const typeorm_2 = require("@nestjs/typeorm");
 const jwt_service_1 = require("../jwt/jwt.service");
+const user_entity_1 = require("./entities/user.entity");
+const verification_entity_1 = require("./entities/verification.entity");
+const post_entity_1 = require("../posts/entities/post.entity");
 let UsersService = class UsersService {
-    constructor(users, jwtService) {
+    constructor(users, verifications, posts, jwtService) {
         this.users = users;
+        this.verifications = verifications;
+        this.posts = posts;
         this.jwtService = jwtService;
     }
     async createAccount({ email, password, role, }) {
@@ -29,7 +33,8 @@ let UsersService = class UsersService {
             if (exist) {
                 return { ok: false, error: 'there is a user with that email already' };
             }
-            await this.users.save(this.users.create({ email, password, role }));
+            const user = await this.users.save(this.users.create({ email, password, role }));
+            await this.verifications.save(this.verifications.create({ user }));
             return {
                 ok: true,
             };
@@ -40,7 +45,7 @@ let UsersService = class UsersService {
     }
     async login({ email, password, }) {
         try {
-            const user = await this.users.findOne({ email });
+            const user = await this.users.findOne({ email }, { select: ['password', 'id'] });
             if (!user) {
                 return {
                     ok: false,
@@ -69,11 +74,41 @@ let UsersService = class UsersService {
     async findById(id) {
         return this.users.findOne({ id });
     }
+    async editProfile(userId, { email, password }) {
+        const user = await this.users.findOne(userId);
+        if (email) {
+            user.email = email;
+            user.verified = false;
+            await this.verifications.save(this.verifications.create({ user }));
+        }
+        if (password) {
+            user.password = password;
+        }
+        return this.users.save(user);
+    }
+    async verifyEmail(code) {
+        try {
+            const verification = await this.verifications.findOne({ code }, { relations: ['user'] });
+            if (verification) {
+                verification.user.verified = true;
+                this.users.save(verification.user);
+                return { ok: true };
+            }
+            return { ok: false, error: 'Vertification is not found.ß' };
+        }
+        catch (error) {
+            return { ok: false, error };
+        }
+    }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository,
+    __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.User)),
+    __param(1, (0, typeorm_2.InjectRepository)(verification_entity_1.Verification)),
+    __param(2, (0, typeorm_2.InjectRepository)(post_entity_1.Post)),
+    __metadata("design:paramtypes", [typeorm_1.Repository,
+        typeorm_1.Repository,
+        typeorm_1.Repository,
         jwt_service_1.JwtService])
 ], UsersService);
 exports.UsersService = UsersService;

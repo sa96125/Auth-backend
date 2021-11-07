@@ -4,18 +4,22 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
+
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostsModule } from './posts/posts.module';
-import * as Joi from 'joi';
-import { Post } from './posts/entities/post.entity';
-import { UsersModule } from './users/users.module';
 import { CommonModule } from './common/common.module';
-import { User } from './users/entities/user.entity';
-import { JwtModule } from './jwt/jwt.module';
-import { JwtMiddleware } from './jwt/jwt.middleware';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { PostsModule } from './posts/posts.module';
+import { JwtModule } from './jwt/jwt.module';
+
+import { User } from './users/entities/user.entity';
+import { Verification } from './users/entities/verification.entity';
+import { Post } from './posts/entities/post.entity';
+
+import { JwtMiddleware } from './jwt/jwt.middleware';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
@@ -42,19 +46,19 @@ import { AuthModule } from './auth/auth.module';
       database: process.env.DB_DATABASE,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: true,
-      entities: [User, Post],
+      entities: [User, Verification, Post],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
-    PostsModule,
-    UsersModule,
     CommonModule,
+    AuthModule,
+    UsersModule,
+    PostsModule,
     JwtModule.forRoot({
       secretKey: process.env.SECRET_KEY,
     }),
-    AuthModule,
   ],
   controllers: [],
   providers: [],
