@@ -32,61 +32,19 @@ let UsersResolver = class UsersResolver {
         return [];
     }
     async createAccount(createAccountInput) {
-        try {
-            return await this.userService.createAccount(createAccountInput);
-        }
-        catch (error) {
-            return {
-                ok: false,
-                error,
-            };
-        }
+        return await this.userService.createAccount(createAccountInput);
     }
     async login(loginInput) {
-        try {
-            return await this.userService.login(loginInput);
-        }
-        catch (error) {
-            return {
-                ok: false,
-                error,
-            };
-        }
+        return await this.userService.login(loginInput);
     }
     me(authUser) {
         return authUser;
     }
     async userProfile(userProfileInput) {
-        try {
-            const user = await this.userService.findById(userProfileInput.userId);
-            if (!user) {
-                throw new Error();
-            }
-            return {
-                ok: Boolean(user),
-                user,
-            };
-        }
-        catch (error) {
-            return {
-                error: 'user not found',
-                ok: false,
-            };
-        }
+        return this.userService.findById(userProfileInput.userId);
     }
     async editProfile(authUser, editProfileInput) {
-        try {
-            await this.userService.editProfile(authUser.id, editProfileInput);
-            return {
-                ok: true,
-            };
-        }
-        catch (error) {
-            return {
-                ok: false,
-                error,
-            };
-        }
+        return this.userService.editProfile(authUser.id, editProfileInput);
     }
     async verifyEmail(verifyEmailInput) {
         return await this.userService.verifyEmail(verifyEmailInput.code);

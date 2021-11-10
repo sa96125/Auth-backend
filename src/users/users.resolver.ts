@@ -28,27 +28,13 @@ export class UsersResolver {
   @Mutation((type) => CreateAccountOutput)
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
-  ): Promise<CreateAccountOutput> {
-    try {
-      return await this.userService.createAccount(createAccountInput);
-    } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
-    }
+    ): Promise<CreateAccountOutput> {
+      return await this.userService.createAccount(createAccountInput)
   }
 
   @Mutation((returns) => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
-    try {
-      return await this.userService.login(loginInput);
-    } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
-    }
+    return await this.userService.login(loginInput)
   }
 
   @Query((returns) => User)
@@ -62,23 +48,7 @@ export class UsersResolver {
   async userProfile(
     @Args() userProfileInput: UserProfileInput,
   ): Promise<UserProfileOutput> {
-    try {
-      const user = await this.userService.findById(userProfileInput.userId);
-
-      if (!user) {
-        throw new Error();
-      }
-
-      return {
-        ok: Boolean(user),
-        user,
-      };
-    } catch (error) {
-      return {
-        error: 'user not found',
-        ok: false,
-      };
-    }
+    return this.userService.findById(userProfileInput.userId)
   }
 
   @UseGuards(AuthGuard)
@@ -87,17 +57,7 @@ export class UsersResolver {
     @AuthUser() authUser: User,
     @Args('input') editProfileInput: EditProfileInput,
   ): Promise<EditProfileOutput> {
-    try {
-      await this.userService.editProfile(authUser.id, editProfileInput);
-      return {
-        ok: true,
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
-    }
+    return this.userService.editProfile(authUser.id, editProfileInput);
   }
 
   @Mutation((returns) => VerifyEmailOutput)
@@ -107,5 +67,4 @@ export class UsersResolver {
     return await this.userService.verifyEmail(verifyEmailInput.code);
   }
 
-  
 }

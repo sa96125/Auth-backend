@@ -72,19 +72,39 @@ let UsersService = class UsersService {
         }
     }
     async findById(id) {
-        return this.users.findOne({ id });
+        try {
+            const user = await this.users.findOne(id);
+            if (user) {
+                return {
+                    ok: true,
+                    user: user,
+                };
+            }
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error: 'User not found',
+            };
+        }
     }
     async editProfile(userId, { email, password }) {
-        const user = await this.users.findOne(userId);
-        if (email) {
-            user.email = email;
-            user.verified = false;
-            await this.verifications.save(this.verifications.create({ user }));
+        try {
+            const user = await this.users.findOne(userId);
+            if (email) {
+                user.email = email;
+                user.verified = false;
+                await this.verifications.save(this.verifications.create({ user }));
+            }
+            if (password) {
+                user.password = password;
+            }
+            await this.users.save(user);
+            return { ok: true };
         }
-        if (password) {
-            user.password = password;
+        catch (error) {
+            return { ok: false, error: 'Could not update profile' };
         }
-        return this.users.save(user);
     }
     async verifyEmail(code) {
         try {
