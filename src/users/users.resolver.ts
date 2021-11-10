@@ -29,12 +29,12 @@ export class UsersResolver {
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
     ): Promise<CreateAccountOutput> {
-      return await this.userService.createAccount(createAccountInput)
+      return this.userService.createAccount(createAccountInput)
   }
 
   @Mutation((returns) => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
-    return await this.userService.login(loginInput)
+    return this.userService.login(loginInput)
   }
 
   @Query((returns) => User)
@@ -64,7 +64,7 @@ export class UsersResolver {
   async verifyEmail(
     @Args('input') verifyEmailInput: VerifyEmailInput,
   ): Promise<VerifyEmailOutput> {
-    return await this.userService.verifyEmail(verifyEmailInput.code);
+    return this.userService.verifyEmail(verifyEmailInput.code);
   }
 
 }

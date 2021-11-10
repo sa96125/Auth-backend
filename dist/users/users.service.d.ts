@@ -15,7 +15,7 @@ export declare class UsersService {
     private readonly jwtService;
     constructor(users: Repository<User>, verifications: Repository<Verification>, posts: Repository<Post>, jwtService: JwtService);
     createAccount({ email, password, role, }: CreateAccountInput): Promise<CreateAccountOutput>;
-    login({ email, password, }: LoginInput): Promise<LoginOutput>;
+    login({ email, password }: LoginInput): Promise<LoginOutput>;
     findById(id: number): Promise<UserProfileOutput>;
     editProfile(userId: number, { email, password }: EditProfileInput): Promise<EditProfileOutput>;
     verifyEmail(code: string): Promise<VerifyEmailOutput>;

@@ -32,10 +32,10 @@ let UsersResolver = class UsersResolver {
         return [];
     }
     async createAccount(createAccountInput) {
-        return await this.userService.createAccount(createAccountInput);
+        return this.userService.createAccount(createAccountInput);
     }
     async login(loginInput) {
-        return await this.userService.login(loginInput);
+        return this.userService.login(loginInput);
     }
     me(authUser) {
         return authUser;
@@ -47,7 +47,7 @@ let UsersResolver = class UsersResolver {
         return this.userService.editProfile(authUser.id, editProfileInput);
     }
     async verifyEmail(verifyEmailInput) {
-        return await this.userService.verifyEmail(verifyEmailInput.code);
+        return this.userService.verifyEmail(verifyEmailInput.code);
     }
 };
 __decorate([

@@ -9,7 +9,10 @@ import { Verification } from './entities/verification.entity';
 import { Post } from 'src/posts/entities/post.entity';
 
 import { LoginInput, LoginOutput } from './dtos/login.dto';
-import { CreateAccountInput, CreateAccountOutput } from './dtos/create-account.dto';
+import {
+  CreateAccountInput,
+  CreateAccountOutput,
+} from './dtos/create-account.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
 import { UserProfileOutput } from './dtos/user-profile.dto';
@@ -46,10 +49,7 @@ export class UsersService {
     }
   }
 
-  async login({
-    email,
-    password,
-  }: LoginInput): Promise<LoginOutput> {
+  async login({ email, password }: LoginInput): Promise<LoginOutput> {
     try {
       const user = await this.users.findOne(
         { email },
@@ -130,10 +130,11 @@ export class UsersService {
 
       if (verification) {
         verification.user.verified = true;
-        this.users.save(verification.user);
+        await this.users.save(verification.user);
+        await this.verifications.delete(verification.id);
         return { ok: true };
       }
-      return { ok: false, error: 'Vertification is not found.ß' };
+      return { ok: false, error: 'Vertification is not found.' };
     } catch (error) {
       return { ok: false, error };
     }
