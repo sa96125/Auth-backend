@@ -13,28 +13,24 @@ export class MailService {
   }
 
   private async sendEmail(subject: string, content: string, to: string) {
-    try {
-      const form = new FormData();
-      form.append('from', `Excited User <mailgun@${this.options.domain}>`);
-      form.append('to', to);
-      form.append('subject', subject);
-      form.append('content', content);
+    const form = new FormData();
+    form.append('from', `Excited User <mailgun@${this.options.domain}>`);
+    form.append('to', to);
+    form.append('subject', subject);
+    form.append('text', content);
 
-      const res = await got(
-        `https://api.mailgun.net/v3/${this.options.domain}/messages`,
-        {
-          headers: {
-            Authorization: `Basic ${Buffer.from(
-              `api:${this.options.apiKey}`,
-            ).toString('base64')}`,
-          },
-          method: 'POST',
-          body: form,
+    const res = await got(
+      `https://api.mailgun.net/v3/${this.options.domain}/messages`,
+      {
+        headers: {
+          Authorization: `Basic ${Buffer.from(
+            `api:${this.options.apiKey}`,
+          ).toString('base64')}`,
         },
-      );
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
+        method: 'POST',
+        body: form,
+      },
+    );
+    console.log(res.body);
   }
 }
