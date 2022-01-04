@@ -53,6 +53,7 @@ import * as Joi from 'joi';
       entities: [User, Verification, Post],
     }),
     GraphQLModule.forRoot({
+      // code first : 따로 저장하지 않는 방법.
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
