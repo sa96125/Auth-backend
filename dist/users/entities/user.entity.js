@@ -50,7 +50,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, graphql_1.Field)((returns) => String, { nullable: true }),
+    (0, graphql_1.Field)((returns) => String),
     (0, typeorm_1.Column)({ select: false }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
