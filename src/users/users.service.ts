@@ -133,7 +133,7 @@ export class UsersService {
         await this.verifications.delete(verification.id);
         return { ok: true };
       }
-      return { ok: false, error: 'Vertification is not found.' };
+      return { ok: false, error: 'Verification is not found.' };
     } catch (error) {
       return { ok: false, error };
     }

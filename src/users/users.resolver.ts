@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
@@ -28,18 +29,19 @@ export class UsersResolver {
   @Mutation((type) => CreateAccountOutput)
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
-    ): Promise<CreateAccountOutput> {
-      return this.userService.createAccount(createAccountInput)
+  ): Promise<CreateAccountOutput> {
+    return this.userService.createAccount(createAccountInput);
   }
 
   @Mutation((returns) => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
-    return this.userService.login(loginInput)
+    return this.userService.login(loginInput);
   }
 
   @Query((returns) => User)
   @UseGuards(AuthGuard)
   me(@AuthUser() authUser: User): User {
+    console.log(authUser);
     return authUser;
   }
 
@@ -48,7 +50,7 @@ export class UsersResolver {
   async userProfile(
     @Args() userProfileInput: UserProfileInput,
   ): Promise<UserProfileOutput> {
-    return this.userService.findById(userProfileInput.userId)
+    return this.userService.findById(userProfileInput.userId);
   }
 
   @UseGuards(AuthGuard)
@@ -66,5 +68,4 @@ export class UsersResolver {
   ): Promise<VerifyEmailOutput> {
     return this.userService.verifyEmail(verifyEmailInput.code);
   }
-
 }

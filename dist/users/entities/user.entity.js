@@ -63,8 +63,10 @@ __decorate([
     __metadata("design:type", Number)
 ], User.prototype, "role", void 0);
 __decorate([
-    (0, graphql_1.Field)((returns) => Boolean),
+    (0, graphql_1.Field)((returns) => Boolean, { defaultValue: true }),
     (0, typeorm_1.Column)({ default: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
 ], User.prototype, "verified", void 0);
 __decorate([
@@ -75,6 +77,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], User.prototype, "hashFunction", null);
 User = __decorate([
+    (0, graphql_1.InputType)({ isAbstract: true }),
     (0, graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()
 ], User);
