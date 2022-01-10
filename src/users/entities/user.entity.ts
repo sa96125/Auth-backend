@@ -1,5 +1,17 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  Field,
+  InputType,
+  ObjectType,
+  registerEnumType,
+} from '@nestjs/graphql';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -12,6 +24,7 @@ enum UserRole {
 
 registerEnumType(UserRole, { name: 'UserRole' });
 
+@InputType({ isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
@@ -31,8 +44,10 @@ export class User extends CoreEntity {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @Field((returns) => Boolean)
+  @Field((returns) => Boolean, { defaultValue: true })
   @Column({ default: false })
+  @IsOptional()
+  @IsBoolean()
   verified: boolean;
 
   @BeforeInsert()
