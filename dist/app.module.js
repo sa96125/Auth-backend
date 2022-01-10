@@ -57,7 +57,7 @@ AppModule = __decorate([
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_DATABASE,
                 synchronize: process.env.NODE_ENV !== 'prod',
-                logging: true,
+                logging: process.env.NODE_ENV !== 'prod',
                 entities: [user_entity_1.User, verification_entity_1.Verification, post_entity_1.Post],
             }),
             graphql_1.GraphQLModule.forRoot({
