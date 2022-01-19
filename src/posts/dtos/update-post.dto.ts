@@ -1,8 +1,8 @@
 import { ArgsType, Field, InputType, PartialType } from '@nestjs/graphql';
-import { CreatePostDto } from './create-post.dto';
+import { CreatePostInput } from './create-post.dto';
 
 @InputType()
-export class UpdatePostDataType extends PartialType(CreatePostDto) {}
+export class UpdatePostDataType extends PartialType(CreatePostInput) {}
 
 @ArgsType()
 export class UpdatePostDto {

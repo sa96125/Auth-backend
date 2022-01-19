@@ -22,11 +22,12 @@ const post_entity_1 = require("./posts/entities/post.entity");
 const jwt_middleware_1 = require("./jwt/jwt.middleware");
 const mail_module_1 = require("./mail/mail.module");
 const Joi = require("joi");
+const category_entity_1 = require("./posts/entities/category.entity");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
             .apply(jwt_middleware_1.JwtMiddleware)
-            .forRoutes({ path: '/graphql', method: common_1.RequestMethod.ALL });
+            .forRoutes({ path: '*', method: common_1.RequestMethod.ALL });
     }
 };
 AppModule = __decorate([
@@ -58,19 +59,19 @@ AppModule = __decorate([
                 database: process.env.DB_DATABASE,
                 synchronize: process.env.NODE_ENV !== 'prod',
                 logging: process.env.NODE_ENV !== 'prod',
-                entities: [user_entity_1.User, verification_entity_1.Verification, post_entity_1.Post],
+                entities: [user_entity_1.User, verification_entity_1.Verification, post_entity_1.Post, category_entity_1.Category],
+            }),
+            jwt_module_1.JwtModule.forRoot({
+                secretKey: process.env.SECRET_KEY,
             }),
             graphql_1.GraphQLModule.forRoot({
                 autoSchemaFile: true,
                 context: ({ req }) => ({ user: req['user'] }),
             }),
-            common_module_1.CommonModule,
             auth_module_1.AuthModule,
+            common_module_1.CommonModule,
             users_module_1.UsersModule,
             posts_module_1.PostsModule,
-            jwt_module_1.JwtModule.forRoot({
-                secretKey: process.env.SECRET_KEY,
-            }),
             mail_module_1.MailModule.forRoot({
                 apiKey: process.env.MAILGUN_API_KEY,
                 domain: process.env.MAILGUN_DOMAIN_NAME,

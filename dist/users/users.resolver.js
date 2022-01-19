@@ -38,7 +38,6 @@ let UsersResolver = class UsersResolver {
         return this.userService.login(loginInput);
     }
     me(authUser) {
-        console.log(authUser);
         return authUser;
     }
     async userProfile(userProfileInput) {

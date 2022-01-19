@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 
 import { User } from './entities/user.entity';
@@ -41,7 +41,6 @@ export class UsersResolver {
   @Query((returns) => User)
   @UseGuards(AuthGuard)
   me(@AuthUser() authUser: User): User {
-    console.log(authUser);
     return authUser;
   }
 

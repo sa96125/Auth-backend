@@ -14,12 +14,13 @@ export class JwtMiddleware implements NestMiddleware {
     if ('x-jwt' in req.headers) {
       const token = req.headers['x-jwt'];
       const decoded = this.jwtService.verify(token);
-      if (typeof decoded === 'object' && decoded.hasOwnProperty('id')) {
-        try {
-          const user = await this.userService.findById(decoded['id']);
+
+      try {
+        const { ok, user } = await this.userService.findById(+decoded);
+        if (ok) {
           req['user'] = user;
-        } catch (error) {}
-      }
+        }
+      } catch (error) {}
     }
     next();
   }

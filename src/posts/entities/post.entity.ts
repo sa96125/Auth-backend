@@ -1,14 +1,14 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { IsString, Length } from 'class-validator';
+import { CoreEntity } from 'src/common/entities/core.entity';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { Category } from './category.entity';
 
+@InputType('PostInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
-export class Post {
-  @Field((returns) => Number)
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Post extends CoreEntity {
   @Field((returns) => String)
   @Column()
   @IsString()
@@ -21,12 +21,14 @@ export class Post {
   @Length(5, 100)
   content?: string;
 
-  @Field((returns) => Boolean, { defaultValue: true })
-  @Column({ default: true })
-  @IsOptional()
-  @IsBoolean()
-  public: boolean;
+  @Field((returns) => Category)
+  @ManyToOne((type) => Category, (category) => category.posts, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  category: Category;
 
-  // user[]
-  // comment[]
+  @Field((returns) => User)
+  @ManyToOne((type) => User, (user) => user.posts)
+  user: User;
 }

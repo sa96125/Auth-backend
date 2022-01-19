@@ -12,14 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Post = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const class_validator_1 = require("class-validator");
+const core_entity_1 = require("../../common/entities/core.entity");
+const user_entity_1 = require("../../users/entities/user.entity");
 const typeorm_1 = require("typeorm");
-let Post = class Post {
+const category_entity_1 = require("./category.entity");
+let Post = class Post extends core_entity_1.CoreEntity {
 };
-__decorate([
-    (0, graphql_1.Field)((returns) => Number),
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], Post.prototype, "id", void 0);
 __decorate([
     (0, graphql_1.Field)((returns) => String),
     (0, typeorm_1.Column)(),
@@ -35,13 +33,20 @@ __decorate([
     __metadata("design:type", String)
 ], Post.prototype, "content", void 0);
 __decorate([
-    (0, graphql_1.Field)((returns) => Boolean, { defaultValue: true }),
-    (0, typeorm_1.Column)({ default: true }),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsBoolean)(),
-    __metadata("design:type", Boolean)
-], Post.prototype, "public", void 0);
+    (0, graphql_1.Field)((returns) => category_entity_1.Category),
+    (0, typeorm_1.ManyToOne)((type) => category_entity_1.Category, (category) => category.posts, {
+        nullable: true,
+        onDelete: 'SET NULL',
+    }),
+    __metadata("design:type", category_entity_1.Category)
+], Post.prototype, "category", void 0);
+__decorate([
+    (0, graphql_1.Field)((returns) => user_entity_1.User),
+    (0, typeorm_1.ManyToOne)((type) => user_entity_1.User, (user) => user.posts),
+    __metadata("design:type", user_entity_1.User)
+], Post.prototype, "user", void 0);
 Post = __decorate([
+    (0, graphql_1.InputType)('PostInputType', { isAbstract: true }),
     (0, graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()
 ], Post);

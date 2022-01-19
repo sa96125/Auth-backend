@@ -1,11 +1,11 @@
-import { Repository, UpdateResult } from 'typeorm';
-import { CreatePostDto } from './dtos/create-post.dto';
-import { UpdatePostDto } from './dtos/update-post.dto';
+import { User } from 'src/users/entities/user.entity';
+import { Repository } from 'typeorm';
+import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
+import { Category } from './entities/category.entity';
 import { Post } from './entities/post.entity';
 export declare class PostsService {
     private readonly posts;
-    constructor(posts: Repository<Post>);
-    getAllPosts(): Promise<Post[]>;
-    createPost(createPostDto: CreatePostDto): Promise<Post>;
-    updatePost({ id, data }: UpdatePostDto): Promise<UpdateResult>;
+    private readonly categories;
+    constructor(posts: Repository<Post>, categories: Repository<Category>);
+    createPost(user: User, createPostInput: CreatePostInput): Promise<CreatePostOutput>;
 }

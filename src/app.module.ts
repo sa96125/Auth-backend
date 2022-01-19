@@ -21,6 +21,7 @@ import { Post } from './posts/entities/post.entity';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { MailModule } from './mail/mail.module';
 import * as Joi from 'joi';
+import { Category } from './posts/entities/category.entity';
 
 @Module({
   imports: [
@@ -50,20 +51,20 @@ import * as Joi from 'joi';
       database: process.env.DB_DATABASE,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod',
-      entities: [User, Verification, Post],
+      entities: [User, Verification, Post, Category],
+    }),
+    JwtModule.forRoot({
+      secretKey: process.env.SECRET_KEY,
     }),
     GraphQLModule.forRoot({
       // code first : 따로 저장하지 않는 방법.
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
-    CommonModule,
     AuthModule,
+    CommonModule,
     UsersModule,
     PostsModule,
-    JwtModule.forRoot({
-      secretKey: process.env.SECRET_KEY,
-    }),
     MailModule.forRoot({
       apiKey: process.env.MAILGUN_API_KEY,
       domain: process.env.MAILGUN_DOMAIN_NAME,
@@ -77,6 +78,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .forRoutes({ path: '/graphql', method: RequestMethod.ALL });
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

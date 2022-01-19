@@ -15,58 +15,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostsResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const graphql_2 = require("@nestjs/graphql");
+const auth_user_decorator_1 = require("../auth/auth-user.decorator");
+const user_entity_1 = require("../users/entities/user.entity");
 const create_post_dto_1 = require("./dtos/create-post.dto");
-const update_post_dto_1 = require("./dtos/update-post.dto");
 const post_entity_1 = require("./entities/post.entity");
 const posts_service_1 = require("./posts.service");
 let PostsResolver = class PostsResolver {
     constructor(postService) {
         this.postService = postService;
     }
-    async posts() {
-        return await this.postService.getAllPosts();
-    }
-    async createPost(data) {
-        try {
-            await this.postService.createPost(data);
-            return true;
-        }
-        catch (error) {
-            console.log(error);
-            return false;
-        }
-    }
-    async updatePost(data) {
-        try {
-            await this.postService.updatePost(data);
-            return true;
-        }
-        catch (error) {
-            console.log(error);
-            return false;
-        }
+    async createPost(authUser, createPostInput) {
+        return this.postService.createPost(authUser, createPostInput);
     }
 };
 __decorate([
-    (0, graphql_1.Query)((returns) => [post_entity_1.Post]),
+    (0, graphql_1.Mutation)((returns) => create_post_dto_1.CreatePostOutput),
+    __param(0, (0, auth_user_decorator_1.AuthUser)()),
+    __param(1, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], PostsResolver.prototype, "posts", null);
-__decorate([
-    (0, graphql_1.Mutation)((returns) => Boolean),
-    __param(0, (0, graphql_1.Args)('data')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_post_dto_1.CreatePostDto]),
+    __metadata("design:paramtypes", [user_entity_1.User,
+        create_post_dto_1.CreatePostInput]),
     __metadata("design:returntype", Promise)
 ], PostsResolver.prototype, "createPost", null);
-__decorate([
-    (0, graphql_1.Mutation)((returns) => Boolean),
-    __param(0, (0, graphql_1.Args)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [update_post_dto_1.UpdatePostDto]),
-    __metadata("design:returntype", Promise)
-], PostsResolver.prototype, "updatePost", null);
 PostsResolver = __decorate([
     (0, graphql_2.Resolver)((of) => post_entity_1.Post),
     __metadata("design:paramtypes", [posts_service_1.PostsService])

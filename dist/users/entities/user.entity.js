@@ -16,6 +16,7 @@ const core_entity_1 = require("../../common/entities/core.entity");
 const typeorm_1 = require("typeorm");
 const bcrypt = require("bcrypt");
 const common_1 = require("@nestjs/common");
+const post_entity_1 = require("../../posts/entities/post.entity");
 var UserRole;
 (function (UserRole) {
     UserRole[UserRole["Mentor"] = 0] = "Mentor";
@@ -29,6 +30,7 @@ let User = class User extends core_entity_1.CoreEntity {
                 this.password = await bcrypt.hash(this.password, 10);
             }
             catch (error) {
+                console.log(error);
                 throw new common_1.InternalServerErrorException();
             }
         }
@@ -39,6 +41,7 @@ let User = class User extends core_entity_1.CoreEntity {
             return ok;
         }
         catch (error) {
+            console.log(error);
             throw new common_1.InternalServerErrorException();
         }
     }
@@ -70,6 +73,11 @@ __decorate([
     __metadata("design:type", Boolean)
 ], User.prototype, "verified", void 0);
 __decorate([
+    (0, graphql_1.Field)((returns) => [post_entity_1.Post]),
+    (0, typeorm_1.OneToMany)((type) => post_entity_1.Post, (post) => post.user),
+    __metadata("design:type", Array)
+], User.prototype, "posts", void 0);
+__decorate([
     (0, typeorm_1.BeforeInsert)(),
     (0, typeorm_1.BeforeUpdate)(),
     __metadata("design:type", Function),
@@ -77,7 +85,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], User.prototype, "hashFunction", null);
 User = __decorate([
-    (0, graphql_1.InputType)({ isAbstract: true }),
+    (0, graphql_1.InputType)('UserInputType', { isAbstract: true }),
     (0, graphql_1.ObjectType)(),
     (0, typeorm_1.Entity)()
 ], User);

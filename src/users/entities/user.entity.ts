@@ -13,9 +13,10 @@ import {
   IsString,
 } from 'class-validator';
 import { CoreEntity } from 'src/common/entities/core.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Post } from 'src/posts/entities/post.entity';
 
 enum UserRole {
   Mentor,
@@ -24,7 +25,7 @@ enum UserRole {
 
 registerEnumType(UserRole, { name: 'UserRole' });
 
-@InputType({ isAbstract: true })
+@InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
@@ -50,6 +51,10 @@ export class User extends CoreEntity {
   @IsBoolean()
   verified: boolean;
 
+  @Field((returns) => [Post])
+  @OneToMany((type) => Post, (post) => post.user)
+  posts: Post[];
+
   @BeforeInsert()
   @BeforeUpdate()
   async hashFunction(): Promise<void> {
@@ -57,6 +62,7 @@ export class User extends CoreEntity {
       try {
         this.password = await bcrypt.hash(this.password, 10);
       } catch (error) {
+        console.log(error);
         throw new InternalServerErrorException();
       }
     }
@@ -67,6 +73,7 @@ export class User extends CoreEntity {
       const ok = await bcrypt.compare(aPassword, this.password);
       return ok;
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }

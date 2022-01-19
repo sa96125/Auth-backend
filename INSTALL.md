@@ -23,3 +23,13 @@ npm i joi
 // 비밀번호 해쉬 플러그인
 npm i bcrypt
 npm i @types/bcrypt --dev-only
+
+//
+npm i jsonwebtoken
+npm i @types/jsonwebtoken --dev-only
+
+//
+npm i got
+
+//
+npm i form-data
