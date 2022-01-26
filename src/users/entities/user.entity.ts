@@ -18,9 +18,9 @@ import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Post } from 'src/posts/entities/post.entity';
 
-enum UserRole {
-  Mentor,
-  Mentee,
+export enum UserRole {
+  Mentor = 'Mentor',
+  Mentee = 'Mentee',
 }
 
 registerEnumType(UserRole, { name: 'UserRole' });

@@ -4,6 +4,7 @@ import { Category } from './category.entity';
 export declare class Post extends CoreEntity {
     title: string;
     content?: string;
-    category: Category;
+    category?: Category;
     user: User;
+    userId: number;
 }

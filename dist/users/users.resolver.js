@@ -14,16 +14,15 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
-const common_1 = require("@nestjs/common");
 const user_entity_1 = require("./entities/user.entity");
 const users_service_1 = require("./users.service");
-const auth_guard_1 = require("../auth/auth.guard");
 const auth_user_decorator_1 = require("../auth/auth-user.decorator");
 const create_account_dto_1 = require("./dtos/create-account.dto");
 const login_dto_1 = require("./dtos/login.dto");
 const user_profile_dto_1 = require("./dtos/user-profile.dto");
 const edit_profile_dto_1 = require("./dtos/edit-profile.dto");
 const verify_email_dto_1 = require("./dtos/verify-email.dto");
+const role_decorator_1 = require("../auth/role.decorator");
 let UsersResolver = class UsersResolver {
     constructor(userService) {
         this.userService = userService;
@@ -72,7 +71,7 @@ __decorate([
 ], UsersResolver.prototype, "login", null);
 __decorate([
     (0, graphql_1.Query)((returns) => user_entity_1.User),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, role_decorator_1.Role)(['Any']),
     __param(0, (0, auth_user_decorator_1.AuthUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_entity_1.User]),
@@ -80,15 +79,15 @@ __decorate([
 ], UsersResolver.prototype, "me", null);
 __decorate([
     (0, graphql_1.Query)((returns) => user_profile_dto_1.UserProfileOutput),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, role_decorator_1.Role)(['Any']),
     __param(0, (0, graphql_1.Args)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_profile_dto_1.UserProfileInput]),
     __metadata("design:returntype", Promise)
 ], UsersResolver.prototype, "userProfile", null);
 __decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, graphql_1.Mutation)((returns) => edit_profile_dto_1.EditProfileOutput),
+    (0, role_decorator_1.Role)(['Any']),
     __param(0, (0, auth_user_decorator_1.AuthUser)()),
     __param(1, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),

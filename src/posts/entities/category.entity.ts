@@ -14,6 +14,11 @@ export class Category extends CoreEntity {
   @Length(5)
   name: string;
 
+  @Field((returns) => String)
+  @Column()
+  @IsString()
+  description: string;
+
   @Field((returns) => [Post])
   @OneToMany((type) => Post, (post) => post.category)
   posts: Post[];

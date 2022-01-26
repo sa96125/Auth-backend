@@ -16,8 +16,8 @@ exports.PostsService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const category_entity_1 = require("./entities/category.entity");
 const post_entity_1 = require("./entities/post.entity");
+const category_repository_1 = require("./repositories/category.repository");
 let PostsService = class PostsService {
     constructor(posts, categories) {
         this.posts = posts;
@@ -27,13 +27,7 @@ let PostsService = class PostsService {
         try {
             const newPost = this.posts.create(createPostInput);
             newPost.user = user;
-            const categoryName = createPostInput.categoryName.trim().toLowerCase();
-            const categorySlug = categoryName.replace(/ /g, '-');
-            let category = await this.categories.findOne({ slug: categorySlug });
-            if (!category) {
-                category = await this.categories.save(this.categories.create({ slug: categorySlug, name: categoryName }));
-            }
-            newPost.category = category;
+            newPost.category = await this.categories.getOrCreate(createPostInput.categoryName);
             await this.posts.save(newPost);
             return {
                 ok: true,
@@ -46,13 +40,136 @@ let PostsService = class PostsService {
             };
         }
     }
+    async editPost(user, editPostInput) {
+        try {
+            const post = await this.posts.findOne(editPostInput.postId);
+            if (!post) {
+                return {
+                    ok: false,
+                    error: 'Post not found.',
+                };
+            }
+            if (user.id !== post.userId) {
+                return {
+                    ok: false,
+                    error: "you can't edit post that you don't own.",
+                };
+            }
+            let category = null;
+            if (editPostInput.categoryName) {
+                category = await this.categories.getOrCreate(editPostInput.categoryName);
+            }
+            await this.posts.save([
+                Object.assign(Object.assign({ id: editPostInput.postId }, editPostInput), (category && { category })),
+            ]);
+            return {
+                ok: true,
+            };
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error: 'could not edit Post',
+            };
+        }
+    }
+    async deletePost(user, { postId }) {
+        try {
+            const post = await this.posts.findOne(postId);
+            if (!post) {
+                return {
+                    ok: false,
+                    error: 'Post not found.',
+                };
+            }
+            if (user.id !== post.userId) {
+                return {
+                    ok: false,
+                    error: "you can't edit post that you don't own.",
+                };
+            }
+            await this.posts.delete(postId);
+            return {
+                ok: true,
+            };
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error: 'Cannot delete Post.',
+            };
+        }
+    }
+    async allCategories() {
+        try {
+            const categories = await this.categories.find();
+            return { ok: true, categories };
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error: 'no Category here',
+            };
+        }
+    }
+    countPosts(category) {
+        return this.posts.count({ category });
+    }
+    async findCategoryBySlug({ slug, page, }) {
+        try {
+            const category = await this.categories.findOne({ slug });
+            if (!category) {
+                return {
+                    ok: false,
+                    error: 'Category not found.',
+                };
+            }
+            const posts = await this.posts.find({
+                where: { category },
+                take: 25,
+                skip: (page - 1) * 25,
+            });
+            const totalResults = await this.countPosts(category);
+            return {
+                ok: true,
+                posts,
+                category,
+                totalPages: Math.ceil(totalResults / 25),
+            };
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error: 'Could not load Category',
+            };
+        }
+    }
+    async AllPosts({ page }) {
+        try {
+            const [posts, totalResults] = await this.posts.findAndCount({
+                take: 25,
+                skip: (page - 1) * 25,
+            });
+            return {
+                ok: true,
+                results: posts,
+                totalPages: Math.ceil(totalResults / 25),
+                totalResults,
+            };
+        }
+        catch (error) {
+            return {
+                ok: false,
+                error: 'Could not load Posts.',
+            };
+        }
+    }
 };
 PostsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(post_entity_1.Post)),
-    __param(1, (0, typeorm_1.InjectRepository)(category_entity_1.Category)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository])
+        category_repository_1.CategoryRepository])
 ], PostsService);
 exports.PostsService = PostsService;
 //# sourceMappingURL=posts.service.js.map

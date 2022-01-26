@@ -33,7 +33,7 @@ __decorate([
     __metadata("design:type", String)
 ], Post.prototype, "content", void 0);
 __decorate([
-    (0, graphql_1.Field)((returns) => category_entity_1.Category),
+    (0, graphql_1.Field)((returns) => category_entity_1.Category, { nullable: true }),
     (0, typeorm_1.ManyToOne)((type) => category_entity_1.Category, (category) => category.posts, {
         nullable: true,
         onDelete: 'SET NULL',
@@ -42,9 +42,15 @@ __decorate([
 ], Post.prototype, "category", void 0);
 __decorate([
     (0, graphql_1.Field)((returns) => user_entity_1.User),
-    (0, typeorm_1.ManyToOne)((type) => user_entity_1.User, (user) => user.posts),
+    (0, typeorm_1.ManyToOne)((type) => user_entity_1.User, (user) => user.posts, {
+        onDelete: 'CASCADE',
+    }),
     __metadata("design:type", user_entity_1.User)
 ], Post.prototype, "user", void 0);
+__decorate([
+    (0, typeorm_1.RelationId)((post) => post.user),
+    __metadata("design:type", Number)
+], Post.prototype, "userId", void 0);
 Post = __decorate([
     (0, graphql_1.InputType)('PostInputType', { isAbstract: true }),
     (0, graphql_1.ObjectType)(),

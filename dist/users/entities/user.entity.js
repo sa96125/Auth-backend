@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.User = exports.UserRole = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const class_validator_1 = require("class-validator");
 const core_entity_1 = require("../../common/entities/core.entity");
@@ -19,9 +19,9 @@ const common_1 = require("@nestjs/common");
 const post_entity_1 = require("../../posts/entities/post.entity");
 var UserRole;
 (function (UserRole) {
-    UserRole[UserRole["Mentor"] = 0] = "Mentor";
-    UserRole[UserRole["Mentee"] = 1] = "Mentee";
-})(UserRole || (UserRole = {}));
+    UserRole["Mentor"] = "Mentor";
+    UserRole["Mentee"] = "Mentee";
+})(UserRole = exports.UserRole || (exports.UserRole = {}));
 (0, graphql_1.registerEnumType)(UserRole, { name: 'UserRole' });
 let User = class User extends core_entity_1.CoreEntity {
     async hashFunction() {
@@ -63,7 +63,7 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'enum', enum: UserRole }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(UserRole),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
     (0, graphql_1.Field)((returns) => Boolean, { defaultValue: true }),
