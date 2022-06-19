@@ -1,7 +1,7 @@
 import { Args, Mutation, Parent, Query, ResolveField } from '@nestjs/graphql';
 import { Resolver } from '@nestjs/graphql';
-import { AuthUser } from 'src/@auth/auth-user.decorator';
-import { Role } from 'src/@auth/role.decorator';
+import { AuthUser } from 'src/common/decorators/auth-user.decorator';
+import { Role } from 'src/common/decorators/role.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { AllCategoriesOutput } from './dtos/all-categories.dto';
 import { CategoryInput, CategoryOutput } from './dtos/category.dto';

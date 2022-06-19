@@ -1,3 +1,4 @@
+import { JwtService } from 'src/@jwt/jwt.service';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from 'src/posts/entities/post.entity';

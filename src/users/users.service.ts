@@ -1,3 +1,4 @@
+import { MailService } from './../@mail/mail.service';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,6 +25,7 @@ export class UsersService {
     @InjectRepository(Verification)
     private readonly verifications: Repository<Verification>,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async createAccount({
@@ -39,7 +41,14 @@ export class UsersService {
       const user = await this.users.save(
         this.users.create({ email, password, role }),
       );
-      await this.verifications.save(this.verifications.create({ user }));
+      const verification = await this.verifications.save(
+        this.verifications.create({ user }),
+      );
+      this.mailService.sendVerificationEmail(
+        user.email,
+        verification.code,
+        user.email,
+      );
       return {
         ok: true,
       };
@@ -107,8 +116,17 @@ export class UsersService {
       const user = await this.users.findOne(userId);
       if (email) {
         user.email = email;
+
+        // 유저가 너무 쉽게 아이디를 교체할 수 있으므로 동기화 과정을 추가한다.
         user.verified = false;
-        await this.verifications.save(this.verifications.create({ user }));
+        const verification = await this.verifications.save(
+          this.verifications.create({ user }),
+        );
+        this.mailService.sendVerificationEmail(
+          user.email,
+          verification.code,
+          user.email,
+        );
       }
       if (password) {
         user.password = password;
@@ -120,14 +138,18 @@ export class UsersService {
     }
   }
 
+  // verifycation service로 사용하기에는 한가지의 일밖에 안하고, user에 밀접한 관계가 있기에 따로 모듈화 하지 않았다.
   async verifyEmail(code: string): Promise<VerifyEmailOutput> {
     try {
       const verification = await this.verifications.findOne(
         { code },
+        // 관련된 릴레이션 정보도 함께 불러올 수 있다.
         { relations: ['user'] },
       );
+
       if (verification) {
         verification.user.verified = true;
+        console.log(verification.user);
         await this.users.save(verification.user);
         await this.verifications.delete(verification.id);
         return { ok: true };
