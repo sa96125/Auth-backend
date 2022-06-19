@@ -64,17 +64,15 @@ import { APP_PIPE } from '@nestjs/core';
       context: ({ req }) => ({ user: req['user'] }),
     }),
     AuthModule,
-    JwtModule.forRoot({
-      secretKey: process.env.SECRET_KEY,
-    }),
+    JwtModule,
+    CommonModule,
+    UsersModule,
+    PostsModule,
     MailModule.forRoot({
       apiKey: process.env.MAILGUN_API_KEY,
       domain: process.env.MAILGUN_DOMAIN_NAME,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
-    CommonModule,
-    UsersModule,
-    PostsModule,
   ],
   controllers: [],
   providers: [
