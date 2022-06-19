@@ -15,6 +15,8 @@ import { CategoryRepository } from './repositories/category.repository';
 @Injectable()
 export class PostsService {
   constructor(
+    // 포스트의 레포지토리를 생성, 내 DB에 엑세스.
+    // 포스트 레포지토리 타입의 인스턴스 생성
     @InjectRepository(Post)
     private readonly posts: Repository<Post>,
     private readonly categories: CategoryRepository,

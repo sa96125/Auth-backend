@@ -5,8 +5,8 @@ import { UseGuards } from '@nestjs/common';
 
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { AuthUser } from 'src/auth/auth-user.decorator';
+import { AuthGuard } from 'src/@auth/auth.guard';
+import { AuthUser } from 'src/@auth/auth-user.decorator';
 
 import {
   CreateAccountInput,
@@ -16,18 +16,18 @@ import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { UserProfileInput, UserProfileOutput } from './dtos/user-profile.dto';
 import { EditProfileInput, EditProfileOutput } from './dtos/edit-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dtos/verify-email.dto';
-import { Role } from 'src/auth/role.decorator';
+import { Role } from 'src/@auth/role.decorator';
 
 @Resolver((of) => User)
 export class UsersResolver {
   constructor(private readonly userService: UsersService) {}
 
-  @Query((type) => [User])
+  @Query((returns) => [User])
   getAllUsers(): User[] {
     return [];
   }
 
-  @Mutation((type) => CreateAccountOutput)
+  @Mutation((returns) => CreateAccountOutput)
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {

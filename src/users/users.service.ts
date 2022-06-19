@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { JwtService } from 'src/jwt/jwt.service';
+import { JwtService } from 'src/@jwt/jwt.service';
 
 import { User } from './entities/user.entity';
 import { Verification } from './entities/verification.entity';
@@ -20,9 +20,9 @@ import { UserProfileOutput } from './dtos/user-profile.dto';
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
+    @InjectRepository(Post) private readonly posts: Repository<Post>,
     @InjectRepository(Verification)
     private readonly verifications: Repository<Verification>,
-    @InjectRepository(Post) private readonly posts: Repository<Post>,
     private readonly jwtService: JwtService,
   ) {}
 

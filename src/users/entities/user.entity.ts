@@ -19,10 +19,10 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { Post } from 'src/posts/entities/post.entity';
 
 export enum UserRole {
-  Mentor = 'Mentor',
-  Mentee = 'Mentee',
+  Admin = 'Admin',
+  General = 'General',
 }
-
+// 새로운 타입을 작성했다면 그라프큐엘의 필드에 사용할 수 있는 타입을 등록
 registerEnumType(UserRole, { name: 'UserRole' });
 
 @InputType('UserInputType', { isAbstract: true })
@@ -55,6 +55,7 @@ export class User extends CoreEntity {
   @OneToMany((type) => Post, (post) => post.user)
   posts: Post[];
 
+  // entity 리스너를 이용합니다. 엔티티에 이벤트를 연결하는 데코레이터
   @BeforeInsert()
   @BeforeUpdate()
   async hashFunction(): Promise<void> {
