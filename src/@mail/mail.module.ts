@@ -10,6 +10,7 @@ export class MailModule {
     return {
       module: MailModule,
       providers: [
+        // 모듈안에서 사용할 변수(타입)와 값(클라스)을 맵핑하는 곳.
         {
           provide: CONFIG_OPTIONS,
           useValue: options,

@@ -13,6 +13,8 @@ export class Verification extends CoreEntity {
   @Field((type) => String)
   code: string;
 
+  // 이경우 Verification에서 user 정보를 얻길 원하므로 여기에 joinColumn이 필요하다.
+  // cascade를 사용하면 유저가 삭제되면 맵핑된 데이터도 함께 삭제한다.
   @OneToOne((type) => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;

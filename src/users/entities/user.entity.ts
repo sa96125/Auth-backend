@@ -34,6 +34,7 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
+  // select false는 이 모델을 인스턴스화 했을 때, 이 프로퍼티는 불러오지 않는다.
   @Field((returns) => String)
   @Column({ select: false })
   @IsString()
@@ -55,10 +56,11 @@ export class User extends CoreEntity {
   @OneToMany((type) => Post, (post) => post.user)
   posts: Post[];
 
-  // entity 리스너를 이용합니다. 엔티티에 이벤트를 연결하는 데코레이터
+  // entity 리스너(for DB)를 이용합니다. 엔티티에 이벤트를 연결하는 데코레이터
   @BeforeInsert()
   @BeforeUpdate()
   async hashFunction(): Promise<void> {
+    // 패스워드가 담겨있을 때만 작동, 만약 패스워드가 담겨 있다면 기존 패스워드를 변경한다.
     if (this.password) {
       try {
         this.password = await bcrypt.hash(this.password, 10);
